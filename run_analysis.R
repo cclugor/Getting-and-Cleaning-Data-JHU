@@ -31,7 +31,7 @@
 # Development of the tasks:
 # 1. Merge the training and the test sets to create one data set.
 getwd()
-data_dir<-"G:/Mi unidad/Certificados hoja de vida/Coursera/8. Getting and Cleaning Data JHU/Peer-Graded assignment/UCI HAR Dataset"
+data_dir<-"C:/Users/lugor/OneDrive/Documentos/GitHub/GnCD JHU coursera/Getting-and-Cleaning-Data-JHU/UCI HAR Dataset"
 
 library(readr)
 library(dplyr)
@@ -104,3 +104,6 @@ total_m_sd_2<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic"
 # for each activity and each subject.
 tidy_data<-total_m_sd_2%>%group_by(ID,act_lab,Var,SumStatistic,Angle)%>%summarise(mean_each=mean(SumStat))
 tidy_data
+
+write.table(tidy_data,file ="tidy_data.csv" ,row.name=FALSE)
+
