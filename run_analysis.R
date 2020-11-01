@@ -103,4 +103,4 @@ total_m_sd_2<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic"
 # 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable
 # for each activity and each subject.
 tidy_data<-total_m_sd_2%>%group_by(ID,act_lab,Var,SumStatistic,Angle)%>%summarise(mean_each=mean(SumStat))
-
+tidy_data
