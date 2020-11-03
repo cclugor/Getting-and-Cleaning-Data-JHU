@@ -96,6 +96,8 @@ str(total_m_sd_1)
 
 total_m_sd_2<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic","Angle"))
 
+total_m_sd_3<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic","Angle"))
+
 # 3. Use descriptive activity names to name the activities in the data set.
 # I did this and the following task before merging datasets for clarity 
 # 4. Appropriately labels the data set with descriptive variable names.
