@@ -73,8 +73,8 @@ test[,length(test)+1]<-"test"
 
 
 total<-rbind(train,test)
-total<-total[,-3]
-total<-total%>%rename(DB=V566)
+#total<-total[,-3]
+total<-total%>%rename(DB=V565)
 
 ##----  2. Extract only the measurements on the mean and standard deviation for each measurement.-----
 glimpse(total)
@@ -96,16 +96,44 @@ str(total_m_sd_1)
 
 total_m_sd_2<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic","Angle"))
 
-total_m_sd_3<-total_m_sd_1%>%separate(col="Variable",into=c("Var","SumStatistic","Angle"))
+total_m_sd_2$Var <- gsub("^t", "Time_",total_m_sd_2$Var) 
+total_m_sd_2$Var <- gsub("^f", "Frequency_",total_m_sd_2$Var)
 
+total_m_sd_3<-total_m_sd_2%>%separate(col="Var",into=c("time_or_freq","Var"))
+
+total_m_sd_3%>%distinct(Var)
 # 3. Use descriptive activity names to name the activities in the data set.
-# I did this and the following task before merging datasets for clarity 
+# Change 'Mag' to 'Magnitude'
+# Change 'Acc' to 'Accelerometer'
+# Change 'Gyro' to 'Gyroscope'
+
+total_m_sd_3$Var <- gsub("Mag", "_Magnitude",total_m_sd_3$Var)
+total_m_sd_3$Var <- gsub("Acc", "_Accelerometer",total_m_sd_3$Var)
+total_m_sd_3$Var <- gsub("Gyro", "_Gyroscope",total_m_sd_3$Var)
+#total_m_sd_3$Var <- gsub("^Body", "Body_",total_m_sd_3$Var)
 # 4. Appropriately labels the data set with descriptive variable names.
 
 # 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable
 # for each activity and each subject.
-tidy_data<-total_m_sd_2%>%group_by(ID,act_lab,Var,SumStatistic,Angle)%>%summarise(mean_each=mean(SumStat))
+tidy_data<-total_m_sd_3%>%group_by(ID,act_lab,Var,SumStatistic,Angle,time_or_freq)%>%summarise(mean_each=mean(SumStat))
 tidy_data
 
 write.table(tidy_data,file ="tidy_data.csv" ,row.name=FALSE)
 
+#output
+
+# A tibble: 2,640 x 7
+# Groups:   ID, act_lab, Var, SumStatistic, Angle [1,840]
+# ID act_lab Var                SumStatistic Angle time_or_freq mean_each
+# <dbl> <chr>   <chr>              <chr>        <chr> <chr>            <dbl>
+#   1     1 WALKING Body_Accelerometer mean         X     Frequency      -0.532 
+# 2     1 WALKING Body_Accelerometer mean         X     Time            0.266 
+# 3     1 WALKING Body_Accelerometer mean         Y     Frequency      -0.406 
+# 4     1 WALKING Body_Accelerometer mean         Y     Time           -0.0183
+# 5     1 WALKING Body_Accelerometer mean         Z     Frequency      -0.596 
+# 6     1 WALKING Body_Accelerometer mean         Z     Time           -0.108 
+# 7     1 WALKING Body_Accelerometer std          X     Frequency      -0.553 
+# 8     1 WALKING Body_Accelerometer std          X     Time           -0.546 
+# 9     1 WALKING Body_Accelerometer std          Y     Frequency      -0.390 
+# 10     1 WALKING Body_Accelerometer std          Y     Time           -0.368 
+# ... with 2,630 more rows
